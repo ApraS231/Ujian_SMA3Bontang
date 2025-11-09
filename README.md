@@ -1,66 +1,87 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Manajemen Ujian SMAN 3 Bontang
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web berbasis Laravel untuk mengelola penjadwalan, pengawasan, dan pelaksanaan ujian di SMAN 3 Bontang.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Manajemen Ujian**: Buat, edit, dan hapus jadwal ujian.
+- **Manajemen Ruangan**: Kelola daftar ruangan beserta kapasitasnya.
+- **Manajemen Siswa**: Impor data siswa dari file Excel.
+- **Penjadwalan Sesi**: Alokasikan siswa ke ruangan dan sesi ujian secara otomatis berdasarkan kelas.
+- **Kartu Ujian**: Cetak kartu ujian kolektif untuk semua peserta.
+- **Absensi Digital**: Pengawas dapat mencatat kehadiran siswa secara digital.
+- **Berita Acara**: Pengawas dapat mencatat kejadian selama ujian berlangsung.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prasyarat
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Pastikan lingkungan pengembangan Anda memenuhi persyaratan berikut:
 
-## Learning Laravel
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- Database (MySQL, PostgreSQL, dll.)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Langkah-langkah Instalasi
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1.  **Klon Repositori**
+    ```bash
+    git clone https://github.com/username/repo-name.git
+    cd repo-name
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2.  **Instal Dependensi**
+    Instal dependensi PHP dengan Composer dan dependensi JavaScript dengan NPM.
+    ```bash
+    composer install
+    npm install
+    ```
 
-## Laravel Sponsors
+3.  **Konfigurasi Environment**
+    Salin file `.env.example` menjadi `.env` dan konfigurasikan variabel environment, terutama koneksi database.
+    ```bash
+    cp .env.example .env
+    ```
+    Buka file `.env` dan atur `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` sesuai dengan konfigurasi database Anda.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4.  **Hasilkan Kunci Aplikasi**
+    ```bash
+    php artisan key:generate
+    ```
 
-### Premium Partners
+5.  **Jalankan Migrasi Database**
+    Buat tabel-tabel yang diperlukan di database Anda.
+    ```bash
+    php artisan migrate
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+6.  **Buat Akun Pengguna Awal**
+    Jalankan seeder untuk membuat akun panitia dan pengawas default.
+    ```bash
+    php artisan db:seed
+    ```
+    - **Panitia**: `panitia@example.com` / `password`
+    - **Pengawas**: `pengawas@example.com` / `password`
 
-## Contributing
+7.  **Kompilasi Aset Frontend**
+    ```bash
+    npm run dev
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+8.  **Jalankan Server Pengembangan**
+    ```bash
+    php artisan serve
+    ```
+    Aplikasi sekarang akan dapat diakses di `http://localhost:8000`.
 
-## Code of Conduct
+## Alur Kerja Aplikasi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1.  **Panitia**:
+    - Login sebagai panitia.
+    - Impor data siswa melalui menu "Siswa".
+    - Tambahkan ruangan ujian melalui menu "Ruangan".
+    - Gunakan wizard "Ujian" untuk membuat jadwal ujian baru, memilih ruangan, dan mengalokasikan siswa.
+    - Cetak kartu ujian dari menu "Ujian".
+2.  **Pengawas**:
+    - Login sebagai pengawas.
+    - Lihat jadwal mengawas di dashboard.
+    - Lakukan absensi digital dan catat berita acara saat ujian berlangsung.
