@@ -16,8 +16,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Student;
-use App\Models\Exam;
+use App\Models\Siswa;
+use App\Models\Ujian;
 
 class DashboardController extends Controller
 {
@@ -25,8 +25,8 @@ class DashboardController extends Controller
     {
         // Ambil data untuk statistik di dasbor
         $total_pengawas = User::where('role', 'pengawas')->count();
-        $total_siswa = Student::count();
-        $total_ujian = Exam::count();
+        $total_siswa = Siswa::count();
+        $total_ujian = Ujian::count();
 
         return view('admin.dashboard', compact('total_pengawas', 'total_siswa', 'total_ujian'));
     }
