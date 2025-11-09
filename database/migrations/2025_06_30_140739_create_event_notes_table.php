@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('event_notes');
         Schema::create('event_notes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sesi_ujian_id')->constrained('sesi_ujians')->onDelete('cascade');
