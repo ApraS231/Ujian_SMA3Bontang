@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreignId('sesi_ujian_id')->constrained('sesi_ujians')->onDelete('cascade');
             $table->foreignId('siswa_id')->constrained('siswas')->onDelete('cascade');
             $table->integer('table_number'); // Nomor meja siswa di sesi tersebut
-            $table->enum('status', ['hadir', 'tidak hadir', 'belum diisi'])->default('belum diisi');
-            $table->timestamp('attended_at')->nullable(); // Waktu absen
+            $table->enum('attendance_status', ['hadir', 'tidak hadir', 'belum diisi'])->default('belum diisi');
             $table->timestamps();
             
             $table->unique(['sesi_ujian_id', 'siswa_id']); // Siswa hanya bisa terdaftar sekali di satu sesi
