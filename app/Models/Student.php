@@ -17,4 +17,9 @@ class Student extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function kartuUjians()
+    {
+        return $this->hasMany(KartuUjian::class);
+    }
 }

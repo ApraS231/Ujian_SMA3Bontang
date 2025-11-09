@@ -25,4 +25,9 @@ class Exam extends Model
     {
         return $this->hasMany(ExamSession::class);
     }
+
+    public function kartuUjians()
+    {
+        return $this->hasMany(KartuUjian::class);
+    }
 }

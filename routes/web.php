@@ -67,6 +67,15 @@ Route::middleware(['auth', 'role:panitia'])->prefix('admin')->name('admin.')->gr
     Route::get('/exams/{exam}/print-all-cards', [\App\Http\Controllers\Admin\ExamController::class, 'printAllCardsForExam'])->name('exams.print-all-cards');
     Route::get('/exams/{exam}/print-all-reports', [\App\Http\Controllers\Admin\ExamController::class, 'printAllReportsForExam'])->name('exams.print-all-reports');
 
+    // Wizard Pembuatan Kartu Ujian
+    Route::get('kartu-ujian/create-step-1', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep1'])->name('kartu-ujian.create-step-1');
+    Route::post('kartu-ujian/store-step-1', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep1'])->name('kartu-ujian.store-step-1');
+    Route::get('kartu-ujian/{exam}/create-step-2', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep2'])->name('kartu-ujian.create-step-2');
+    Route::post('kartu-ujian/{exam}/store-step-2', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep2'])->name('kartu-ujian.store-step-2');
+    Route::get('kartu-ujian/{exam}/create-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep3'])->name('kartu-ujian.create-step-3');
+    Route::post('kartu-ujian/{exam}/store-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep3'])->name('kartu-ujian.store-step-3');
+
+
     // Manajemen Sesi Ujian (Alokasi & Kartu Ujian)
 
     Route::resource('sessions', ExamSessionController::class);
@@ -90,11 +99,11 @@ Route::middleware(['auth', 'role:pengawas'])->prefix('supervisor')->name('superv
     // Dashboard Pengawas (menampilkan jadwal yang harus diawasi)
    Route::get('/dashboard', [SupervisorDashboardController::class, 'index'])->name('dashboard');
 
-    // Halaman Absensi Digital
-    Route::get('/attendance/{exam_session}', [AttendanceController::class, 'show'])->name('attendance.show');
+    // Halaman Absensi Digital per Ruangan
+    Route::get('/attendance/{exam}/{room}', [AttendanceController::class, 'show'])->name('attendance.show');
     
     // Aksi untuk update status kehadiran (misal via AJAX/Fetch)
-    Route::post('/attendance/update', [AttendanceController::class, 'update'])->name('attendance.update');
+    Route::post('/attendance/update/{kartuUjian}', [AttendanceController::class, 'update'])->name('attendance.update');
 
     // Aksi untuk menyimpan catatan kejadian
     Route::post('/attendance/notes', [AttendanceController::class, 'storeNote'])->name('attendance.storeNote');

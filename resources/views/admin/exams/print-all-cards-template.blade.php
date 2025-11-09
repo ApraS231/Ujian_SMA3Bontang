@@ -1,10 +1,9 @@
-
 <!-- File: resources/views/admin/exams/print-all-cards-template.blade.php -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Kartu Ujian - {{ $exam->subject }}</title>
+    <title>Kartu Ujian</title>
     <style>
         @page {
             size: A4;
@@ -17,12 +16,12 @@
         .card-container {
             border: 1px solid #000;
             padding: 15px;
-            margin-bottom: 1.2cm; /* Jarak antar kartu */
-            height: 80mm; /* Tinggi kartu disesuaikan agar 3 kartu pas di A4 */
+            margin-bottom: 1.2cm;
+            height: 80mm;
             box-sizing: border-box;
             position: relative;
             width: 100%;
-            page-break-inside: avoid !important; /* Mencegah kartu terpotong di tengah */
+            page-break-inside: avoid !important;
         }
         .card-container:last-child {
             margin-bottom: 0;
@@ -112,78 +111,72 @@
     </style>
 </head>
 <body>
-    @php 
-        $allAttendances = [];
-        foreach($exam->examSessions as $session) {
-            foreach($session->attendances as $attendance) {
-                $allAttendances[] = ['session' => $session, 'attendance' => $attendance];
-            }
-        }
-        $totalCards = count($allAttendances);
+    @php
+        $totalCards = $exam->kartuUjians->count();
+        $cardCounter = 0;
     @endphp
 
-    @foreach($allAttendances as $index => $data)
-        @php
-            $session = $data['session'];
-            $attendance = $data['attendance'];
-        @endphp
-        <div class="card-container">
-            <div class="header">
-                <div class="logo">
-                    <img src="{{ public_path('images/tutwuri.jpg') }}" alt="Logo Kiri">
+    @foreach($cardsByRoom as $roomId => $cards)
+        @foreach($cards as $card)
+            @php $cardCounter++; @endphp
+            <div class="card-container">
+                <div class="header">
+                    <div class="logo">
+                        <img src="{{ public_path('images/tutwuri.jpg') }}" alt="Logo Kiri">
+                    </div>
+                    <div class="header-text">
+                        <h1>KARTU PESERTA</h1>
+                        <h1>SMAN 3 BONTANG</h1>
+                        <h2>TAHUN PELAJARAN 2024/2025</h2>
+                    </div>
+                    <div class="logo" style="text-align: right;">
+                        <img src="{{ public_path('images/logo-sekolah.png') }}" alt="Logo Kanan">
+                    </div>
                 </div>
-                <div class="header-text">
-                    <h1>KARTU PESERTA</h1>
-                    <h1>SMAN 3 BONTANG</h1>
-                    <h2>TAHUN PELAJARAN 2024/2025</h2>
+                <div class="content">
+                    <div class="photo">
+                        <div class="photo-box">Foto</div>
+                    </div>
+                    <div class="details">
+                        <table>
+                            <tr>
+                                <td class="label">No Peserta</td>
+                                <td>: {{ 'MRT-' . str_pad($card->student->id, 4, '0', STR_PAD_LEFT) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Nama</td>
+                                <td>: {{ strtoupper($card->student->name) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Kelas</td>
+                                <td>: {{ $card->student->class }}</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Username</td>
+                                <td>: {{ $card->student->nis }}</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Password</td>
+                                <td>: Merdeka{{ substr($card->student->nis, -4) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Ruang</td>
+                                <td>: {{ $card->room->name }} / No. Meja: {{ $card->seat_number }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <div class="logo" style="text-align: right;">
-                    <img src="{{ public_path('images/logo-sekolah.png') }}" alt="Logo Kanan">
+                <div class="footer">
+                    <p>Kepala Sekolah</p>
+                    <p class="name">Harwanti, S.Pd</p>
+                    <p>NIP. 197103111996012001</p>
                 </div>
             </div>
-            <div class="content">
-                <div class="photo">
-                    <div class="photo-box">Foto</div>
-                </div>
-                <div class="details">
-                    <table>
-                        <tr>
-                            <td class="label">No Peserta</td>
-                            <td>: {{ 'MRT-' . str_pad($attendance->student->id, 4, '0', STR_PAD_LEFT) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Nama</td>
-                            <td>: {{ strtoupper($attendance->student->name) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Kelas / Sesi Ujian</td>
-                            <td>: {{ $attendance->student->class }} / {{ $session->session_time }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Username</td>
-                            <td>: {{ $attendance->student->nis }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Password</td>
-                            <td>: Merdeka{{ substr($attendance->student->nis, -4) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Ruang</td>
-                            <td>: {{ $session->room->name }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="footer">
-                <p>Kepala Sekolah</p>
-                <p class="name">Harwanti, S.Pd</p>
-                <p>NIP. 197103111996012001</p>
-            </div>
-        </div>
 
-        {{-- Logika untuk pindah halaman setelah setiap 3 kartu, kecuali kartu terakhir --}}
-        @if(($index + 1) % 3 == 0 && ($index + 1) < $totalCards)
-        @endif
+            @if($cardCounter % 3 == 0 && $cardCounter < $totalCards)
+                <div class="page-break"></div>
+            @endif
+        @endforeach
     @endforeach
 </body>
 </html>

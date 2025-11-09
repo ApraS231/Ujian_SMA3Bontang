@@ -73,23 +73,22 @@ class ExamController extends Controller
     }
     public function printAllCardsForExam(Exam $exam)
     {
-        // Eager load semua relasi yang dibutuhkan dalam satu query
-        $exam->load([
-            'examSessions.room',
-            'examSessions.supervisor',
-            'examSessions.attendances.student'
-        ]);
+        // Eager load relasi baru
+        $exam->load('kartuUjians.student', 'kartuUjians.room');
 
-        // Periksa jika tidak ada sesi sama sekali untuk ujian ini
-        if ($exam->examSessions->isEmpty()) {
-            return back()->with('error', 'Tidak ada sesi yang bisa dicetak untuk ujian ini. Silakan buat sesi terlebih dahulu.');
+        // Periksa jika tidak ada kartu ujian sama sekali untuk ujian ini
+        if ($exam->kartuUjians->isEmpty()) {
+            return back()->with('error', 'Tidak ada kartu ujian yang bisa dicetak untuk ujian ini. Silakan buat melalui wizard terlebih dahulu.');
         }
 
-        // Generate PDF dari view, dengan mengirimkan seluruh data ujian
-        $pdf = PDF::loadView('admin.exams.print-all-cards-template', compact('exam'));
+        // Kelompokkan kartu ujian berdasarkan ruangan
+        $cardsByRoom = $exam->kartuUjians->groupBy('room_id');
+
+        // Generate PDF dari view, dengan mengirimkan data yang sudah dikelompokkan
+        $pdf = PDF::loadView('admin.exams.print-all-cards-template', compact('exam', 'cardsByRoom'));
 
         // Tampilkan PDF di browser
-        return $pdf->stream('semua-kartu-ujian-' . $exam->subject . '.pdf');
+        return $pdf->stream('kartu-peserta-ujian-' . $exam->subject . '.pdf');
     }
     public function printAllReportsForExam(Exam $exam)
     {
