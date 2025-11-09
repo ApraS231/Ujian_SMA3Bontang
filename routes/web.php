@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ExamController;
-use App\Http\Controllers\Admin\ExamSessionController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardController;
 use App\Http\Controllers\Supervisor\AttendanceController;
@@ -74,11 +73,6 @@ Route::middleware(['auth', 'role:panitia'])->prefix('admin')->name('admin.')->gr
     Route::post('kartu-ujian/{exam}/store-step-2', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep2'])->name('kartu-ujian.store-step-2');
     Route::get('kartu-ujian/{exam}/create-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep3'])->name('kartu-ujian.create-step-3');
     Route::post('kartu-ujian/{exam}/store-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep3'])->name('kartu-ujian.store-step-3');
-
-
-    // Manajemen Sesi Ujian (Alokasi & Kartu Ujian)
-
-    Route::resource('sessions', ExamSessionController::class);
 
 
     // Manajemen maintence
