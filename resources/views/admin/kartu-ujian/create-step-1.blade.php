@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 
                     @if ($errors->any())
-                        <div class="alert alert-error mb-4">
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                             <ul>
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -20,24 +20,27 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('admin.kartu-ujian.store-step-1') }}" method="POST">
+                    <form action="{{ route('admin.kartu-ujian.store-step-1') }}" method="POST" class="space-y-6">
                         @csrf
-                        <div class="form-control w-full mb-4">
-                            <label class="label">
-                                <span class="label-text">Mata Pelajaran</span>
-                            </label>
-                            <input type="text" name="subject" placeholder="Contoh: Matematika Wajib" class="input input-bordered w-full" required />
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700">Mata Pelajaran</label>
+                            <input type="text" name="subject" id="subject"
+                                   class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                   placeholder="Contoh: Matematika Wajib" required />
                         </div>
 
-                        <div class="form-control w-full mb-4">
-                            <label class="label">
-                                <span class="label-text">Tanggal Ujian</span>
-                            </label>
-                            <input type="date" name="exam_date" class="input input-bordered w-full" required />
+                        <div>
+                            <label for="exam_date" class="block text-sm font-medium text-gray-700">Tanggal Ujian</label>
+                            <input type="date" name="exam_date" id="exam_date"
+                                   class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                   required />
                         </div>
 
-                        <div class="mt-6">
-                            <button type="submit" class="btn btn-primary">Lanjut ke Langkah 2</button>
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Lanjut ke Langkah 2
+                            </button>
                         </div>
                     </form>
 
