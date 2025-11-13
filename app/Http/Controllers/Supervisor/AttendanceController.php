@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Supervisor;
 
 use App\Http\Controllers\Controller;
-use App\Models\Exam;
+use App\Models\ExamSession;
 use App\Models\Room;
 use App\Models\KartuUjian;
 use App\Models\EventNote;
@@ -12,24 +12,22 @@ use Illuminate\Http\Request;
 class AttendanceController extends Controller
 {
     /**
-     * Menampilkan halaman absensi untuk ujian dan ruangan tertentu.
+     * Menampilkan halaman absensi untuk sesi ujian dan ruangan tertentu.
      */
-    public function show(Exam $exam, Room $room)
+    public function show(ExamSession $examSession, Room $room)
     {
-        // Ambil semua kartu ujian (siswa) untuk ujian dan ruangan ini
-        $kartuUjians = KartuUjian::where('exam_id', $exam->id)
+        $kartuUjians = KartuUjian::where('exam_session_id', $examSession->id)
                                 ->where('room_id', $room->id)
                                 ->with('student')
                                 ->orderBy('seat_number')
                                 ->get();
 
-        // Ambil catatan kejadian yang sudah ada
-        $eventNotes = EventNote::where('exam_id', $exam->id)
+        $eventNotes = EventNote::where('exam_session_id', $examSession->id)
                                ->where('room_id', $room->id)
                                ->latest()
                                ->get();
 
-        return view('supervisor.attendance.show', compact('exam', 'room', 'kartuUjians', 'eventNotes'));
+        return view('supervisor.attendance.show', compact('examSession', 'room', 'kartuUjians', 'eventNotes'));
     }
 
     /**
@@ -58,7 +56,7 @@ class AttendanceController extends Controller
     public function storeNote(Request $request)
     {
         $request->validate([
-            'exam_id' => 'required|exists:exams,id',
+            'exam_session_id' => 'required|exists:exam_sessions,id',
             'room_id' => 'required|exists:rooms,id',
             'note' => 'required|string',
         ]);

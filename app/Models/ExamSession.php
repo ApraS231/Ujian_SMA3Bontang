@@ -2,30 +2,30 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ExamSession extends Model
 {
-    protected $fillable = ['exam_id', 'room_id', 'supervisor_id', 'session_time'];
+    use HasFactory;
 
-    public function exam()
+    protected $table = 'exam_sessions';
+
+    protected $fillable = [
+        'subject_id',
+        'exam_date',
+        'start_time',
+        'end_time',
+    ];
+
+    public function subject()
     {
-        return $this->belongsTo(Exam::class);
+        return $this->belongsTo(Subject::class);
     }
 
-    public function room()
+    public function examCards()
     {
-        return $this->belongsTo(Room::class);
-    }
-
-    public function supervisor()
-    {
-        return $this->belongsTo(User::class, 'supervisor_id');
-    }
-
-    public function attendances()
-    {
-        return $this->hasMany(Attendance::class);
+        return $this->hasMany(KartuUjian::class);
     }
     
     public function eventNotes()

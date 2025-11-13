@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventNote extends Model
 {
-    protected $fillable = ['exam_id', 'room_id', 'note'];
+    protected $fillable = ['exam_session_id', 'room_id', 'note'];
 
-    public function exam()
+    public function examSession()
     {
-        return $this->belongsTo(Exam::class);
+        return $this->belongsTo(ExamSession::class);
     }
 
     public function room()

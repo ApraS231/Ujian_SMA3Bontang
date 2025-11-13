@@ -11,10 +11,11 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 
                     <div class="mb-6 pb-4 border-b border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900">Detail Ujian</h3>
+                        <h3 class="text-lg font-medium text-gray-900">Detail Sesi Ujian</h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            <strong>Mata Pelajaran:</strong> {{ $exam->subject }} |
-                            <strong>Tanggal:</strong> {{ $exam->exam_date->format('d F Y') }}
+                            <strong>Mata Pelajaran:</strong> {{ $examSession->subject->subject }} <br>
+                            <strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($examSession->exam_date)->format('d F Y') }} <br>
+                            <strong>Waktu:</strong> {{ \Carbon\Carbon::parse($examSession->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($examSession->end_time)->format('H:i') }}
                         </p>
                     </div>
 
@@ -28,7 +29,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('admin.kartu-ujian.store-step-2', $exam) }}" method="POST">
+                    <form action="{{ route('admin.kartu-ujian.store-step-2', $examSession) }}" method="POST">
                         @csrf
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Pilih satu atau lebih ruangan</label>

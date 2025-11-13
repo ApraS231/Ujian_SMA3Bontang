@@ -11,10 +11,11 @@
                 <div class="p-6 bg-white border-b border-gray-200">
 
                     <div class="mb-6 pb-4 border-b border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900">Detail Ujian</h3>
+                        <h3 class="text-lg font-medium text-gray-900">Detail Sesi Ujian</h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            <strong>Mata Pelajaran:</strong> {{ $exam->subject }} |
-                            <strong>Tanggal:</strong> {{ $exam->exam_date->format('d F Y') }}
+                            <strong>Mata Pelajaran:</strong> {{ $examSession->subject->subject }} <br>
+                            <strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($examSession->exam_date)->format('d F Y') }} <br>
+                            <strong>Waktu:</strong> {{ \Carbon\Carbon::parse($examSession->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($examSession->end_time)->format('H:i') }}
                         </p>
                     </div>
 
@@ -28,7 +29,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('admin.kartu-ujian.store-step-3', $exam) }}" method="POST">
+                    <form action="{{ route('admin.kartu-ujian.store-step-3', $examSession) }}" method="POST">
                         @csrf
                         <div class="space-y-6">
                             @foreach ($rooms as $room)
@@ -59,7 +60,7 @@
                         </div>
 
                         <div class="mt-8 flex justify-between">
-                            <a href="{{ route('admin.kartu-ujian.create-step-2', $exam) }}"
+                            <a href="{{ route('admin.kartu-ujian.create-step-2', $examSession) }}"
                                class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Kembali
                             </a>

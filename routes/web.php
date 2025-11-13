@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\ExamController;
+use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Supervisor\DashboardController as SupervisorDashboardController;
 use App\Http\Controllers\Supervisor\AttendanceController;
@@ -60,19 +60,20 @@ Route::middleware(['auth', 'role:panitia'])->prefix('admin')->name('admin.')->gr
     // Manajemen Ruangan (CRUD)
     Route::resource('rooms', RoomController::class);
 
-    // Manajemen Ujian (CRUD)
-    Route::resource('exams', ExamController::class);
-    // BARU: Route untuk halaman pencetakan kartu per ujian
-    Route::get('/exams/{exam}/print-all-cards', [\App\Http\Controllers\Admin\ExamController::class, 'printAllCardsForExam'])->name('exams.print-all-cards');
-    Route::get('/exams/{exam}/print-all-reports', [\App\Http\Controllers\Admin\ExamController::class, 'printAllReportsForExam'])->name('exams.print-all-reports');
+    // Manajemen Mata Pelajaran (CRUD)
+    Route::resource('subjects', SubjectController::class)->except(['show']);
 
     // Wizard Pembuatan Kartu Ujian
     Route::get('kartu-ujian/create-step-1', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep1'])->name('kartu-ujian.create-step-1');
     Route::post('kartu-ujian/store-step-1', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep1'])->name('kartu-ujian.store-step-1');
-    Route::get('kartu-ujian/{exam}/create-step-2', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep2'])->name('kartu-ujian.create-step-2');
-    Route::post('kartu-ujian/{exam}/store-step-2', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep2'])->name('kartu-ujian.store-step-2');
-    Route::get('kartu-ujian/{exam}/create-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep3'])->name('kartu-ujian.create-step-3');
-    Route::post('kartu-ujian/{exam}/store-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep3'])->name('kartu-ujian.store-step-3');
+    Route::get('kartu-ujian/{examSession}/create-step-2', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep2'])->name('kartu-ujian.create-step-2');
+    Route::post('kartu-ujian/{examSession}/store-step-2', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep2'])->name('kartu-ujian.store-step-2');
+    Route::get('kartu-ujian/{examSession}/create-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'createStep3'])->name('kartu-ujian.create-step-3');
+    Route::post('kartu-ujian/{examSession}/store-step-3', [\App\Http\Controllers\Admin\KartuUjianController::class, 'storeStep3'])->name('kartu-ujian.store-step-3');
+
+    // Cetak Kartu Ujian
+    Route::get('cetak-kartu', [\App\Http\Controllers\Admin\CetakKartuController::class, 'index'])->name('cetak-kartu.index');
+    Route::get('cetak-kartu/{examSession}', [\App\Http\Controllers\Admin\CetakKartuController::class, 'print'])->name('cetak-kartu.print');
 
 
     // Manajemen maintence
@@ -94,7 +95,7 @@ Route::middleware(['auth', 'role:pengawas'])->prefix('supervisor')->name('superv
    Route::get('/dashboard', [SupervisorDashboardController::class, 'index'])->name('dashboard');
 
     // Halaman Absensi Digital per Ruangan
-    Route::get('/attendance/{exam}/{room}', [AttendanceController::class, 'show'])->name('attendance.show');
+    Route::get('/attendance/{examSession}/{room}', [AttendanceController::class, 'show'])->name('attendance.show');
     
     // Aksi untuk update status kehadiran (misal via AJAX/Fetch)
     Route::post('/attendance/update/{kartuUjian}', [AttendanceController::class, 'update'])->name('attendance.update');

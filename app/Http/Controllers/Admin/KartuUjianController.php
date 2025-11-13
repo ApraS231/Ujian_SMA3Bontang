@@ -4,39 +4,43 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Exam;
+use App\Models\Subject;
+use App\Models\ExamSession;
 use App\Models\Room;
 use App\Models\Student;
 use App\Models\KartuUjian;
 
 class KartuUjianController extends Controller
 {
-    // Step 1: Create Exam
+    // Step 1: Create Exam Session
     public function createStep1()
     {
-        return view('admin.kartu-ujian.create-step-1');
+        $subjects = Subject::all();
+        return view('admin.kartu-ujian.create-step-1', compact('subjects'));
     }
 
     public function storeStep1(Request $request)
     {
         $request->validate([
-            'subject' => 'required|string|max:255',
+            'subject_id' => 'required|exists:subjects,id',
             'exam_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
-        $exam = Exam::create($request->all());
+        $examSession = ExamSession::create($request->all());
 
-        return redirect()->route('admin.kartu-ujian.create-step-2', $exam);
+        return redirect()->route('admin.kartu-ujian.create-step-2', $examSession);
     }
 
     // Step 2: Select Rooms
-    public function createStep2(Exam $exam)
+    public function createStep2(ExamSession $examSession)
     {
         $rooms = Room::all();
-        return view('admin.kartu-ujian.create-step-2', compact('exam', 'rooms'));
+        return view('admin.kartu-ujian.create-step-2', compact('examSession', 'rooms'));
     }
 
-    public function storeStep2(Request $request, Exam $exam)
+    public function storeStep2(Request $request, ExamSession $examSession)
     {
         $request->validate([
             'room_ids' => 'required|array|min:1',
@@ -45,22 +49,23 @@ class KartuUjianController extends Controller
 
         $request->session()->put('selected_rooms', $request->room_ids);
 
-        return redirect()->route('admin.kartu-ujian.create-step-3', $exam);
+        return redirect()->route('admin.kartu-ujian.create-step-3', $examSession);
     }
 
     // Step 3: Assign Students
-    public function createStep3(Exam $exam, Request $request)
+    public function createStep3(ExamSession $examSession, Request $request)
     {
         $room_ids = $request->session()->get('selected_rooms');
+        if (!$room_ids) {
+            return redirect()->route('admin.kartu-ujian.create-step-2', $examSession)->with('error', 'Silakan pilih ruangan terlebih dahulu.');
+        }
         $rooms = Room::whereIn('id', $room_ids)->get();
-        $students = Student::all(); // In a real app, you might want to paginate this
         $classes = Student::select('class')->distinct()->pluck('class');
 
-
-        return view('admin.kartu-ujian.create-step-3', compact('exam', 'rooms', 'students', 'classes'));
+        return view('admin.kartu-ujian.create-step-3', compact('examSession', 'rooms', 'classes'));
     }
 
-    public function storeStep3(Request $request, Exam $exam)
+    public function storeStep3(Request $request, ExamSession $examSession)
     {
         $request->validate([
             'rooms' => 'required|array',
@@ -71,7 +76,7 @@ class KartuUjianController extends Controller
         $room_ids = $request->session()->get('selected_rooms');
         $rooms_data = Room::whereIn('id', $room_ids)->get()->keyBy('id');
 
-        \DB::transaction(function () use ($request, $exam, $rooms_data) {
+        \DB::transaction(function () use ($request, $examSession, $rooms_data) {
             foreach ($request->rooms as $roomId => $config) {
                 $room = $rooms_data->get($roomId);
                 if (!$room) continue;
@@ -81,12 +86,11 @@ class KartuUjianController extends Controller
 
                 foreach ($students as $student) {
                     if ($seat_number > $room->capacity) {
-                        // Optional: Add a warning or error message
                         break;
                     }
 
                     KartuUjian::create([
-                        'exam_id' => $exam->id,
+                        'exam_session_id' => $examSession->id,
                         'room_id' => $roomId,
                         'student_id' => $student->id,
                         'seat_number' => $seat_number,
@@ -99,7 +103,6 @@ class KartuUjianController extends Controller
 
         $request->session()->forget('selected_rooms');
 
-        // Redirect to a summary or success page
         return redirect()->route('admin.dashboard')->with('success', 'Kartu ujian berhasil dibuat.');
     }
 }

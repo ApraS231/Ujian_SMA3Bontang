@@ -12,7 +12,7 @@ class KartuUjian extends Model
     protected $table = 'kartu_ujians';
 
     protected $fillable = [
-        'exam_id',
+        'exam_session_id',
         'room_id',
         'student_id',
         'seat_number',
@@ -20,9 +20,9 @@ class KartuUjian extends Model
         'attended_at',
     ];
 
-    public function exam()
+    public function examSession()
     {
-        return $this->belongsTo(Exam::class);
+        return $this->belongsTo(ExamSession::class);
     }
 
     public function room()
