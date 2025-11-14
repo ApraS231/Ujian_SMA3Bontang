@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('exam_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_id')->constrained()->onDelete('cascade');
-            $table->foreignId('room_id')->constrained()->onDelete('cascade');
-            $table->foreignId('supervisor_id')->constrained('users')->onDelete('cascade'); // Foreign key ke tabel users
-            $table->string('session_time'); // Waktu sesi, misal: "08:00 - 10:00"
+            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+            $table->date('exam_date');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
         });
     }

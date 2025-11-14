@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('event_notes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_session_id')->constrained()->onDelete('cascade');
-            $table->text('note'); // Isi catatan dari pengawas
+            $table->foreignId('exam_session_id')->constrained('exam_sessions')->onDelete('cascade');
+            $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
+            $table->text('note');
             $table->timestamps();
         });
     }

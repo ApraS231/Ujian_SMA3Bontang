@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kartu_ujians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_id')->constrained('exams')->onDelete('cascade');
+            $table->foreignId('exam_session_id')->constrained('exam_sessions')->onDelete('cascade');
             $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->integer('seat_number');
